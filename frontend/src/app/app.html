@@ -1,0 +1,50 @@
+
+<main class="container">
+  <h1>Network Anomaly Detection</h1>
+  <p>
+    Enter network traffic features as JSON to predict
+    whether the record is normal or an attack.
+  </p>
+
+  <label for="features">Network features (JSON)</label>
+
+  <textarea
+    id="features"
+    [(ngModel)]="jsonText"
+    rows="18"
+    spellcheck="false"
+  ></textarea>
+
+  <button
+    type="button"
+    (click)="runPrediction()"
+    [disabled]="loading"
+  >
+    {{ loading ? 'Predicting...' : 'Predict Traffic' }}
+  </button>
+
+  @if (error) {
+    <section class="error">
+      <h2>Error</h2>
+      <p>{{ error }}</p>
+    </section>
+  }
+
+  @if (result) {
+    <section class="result">
+      <h2>Prediction: {{ result.class }}</h2>
+      <p>Numeric label: {{ result.prediction }}</p>
+      <p>Model: {{ result.model }}</p>
+
+      @if (result.probabilities) {
+        <h3>Model probabilities</h3>
+        @for (
+          item of (result.probabilities | keyvalue);
+          track item.key
+        ) {
+          <p>{{ item.key }}: {{ item.value * 100 }}%</p>
+        }
+      }
+    </section>
+  }
+</main>
